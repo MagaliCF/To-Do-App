@@ -21,13 +21,16 @@ import com.example.to_do.models.Task;
 import com.example.to_do.utils.Utils;
 import com.example.to_do.viewmodel.TaskViewModel;
 
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
     ActivityMainBinding binding;
     private TaskViewModel taskViewModel;
-    private String user;
+    private int user;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -36,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        user = Utils.getUser(getApplicationContext(),"authCredentials").getUsername();
+        user = Utils.getUser(getApplicationContext(),"authCredentials").getId();
 
         taskViewModel = (TaskViewModel) new ViewModelProvider(this).get(TaskViewModel.class);
         taskViewModel.init(user);
@@ -81,13 +84,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*taskViewModel.getAllTasks().observe(this, new Observer<List<Task>>() {
-            @Override
-            public void onChanged(List<Task> tasks) {
-                Toast.makeText(MainActivity.this, "Tamaño de la lista de tareas: " + tasks.size(), Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "onChanged: Submit llamado");
-            }
-        });*/
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {

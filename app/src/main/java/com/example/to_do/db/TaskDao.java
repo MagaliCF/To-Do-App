@@ -20,6 +20,6 @@ public interface TaskDao {
     public void update(Task task);
     @Delete
     public void delete(Task task);
-    @Query("SELECT * FROM my_task WHERE user = :user")
-    public LiveData<List<Task>> getAllData(String user);
+    @Query("SELECT * FROM task_table WHERE user = :user")
+    public LiveData<List<Task>> getAllData(int user);
 }

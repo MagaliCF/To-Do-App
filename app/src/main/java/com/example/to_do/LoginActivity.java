@@ -10,7 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.to_do.models.Login;
+import com.example.to_do.models.User;
 import com.example.to_do.utils.Utils;
 
 public class LoginActivity extends AppCompatActivity {
@@ -33,7 +33,10 @@ public class LoginActivity extends AppCompatActivity {
         txtViewRegiterHere.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(LoginActivity.this, "Aún estamos trabajando en ello...", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(LoginActivity.this, "Aún estamos trabajando en ello...", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -44,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
                     Utils.setUser(
                             getApplicationContext(),
                             "authCredentials",
-                            new Login(editTxtUser.getText().toString(), editTxtPassword.getText().toString())
+                            new User(editTxtUser.getText().toString(), editTxtPassword.getText().toString())
                     );
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);

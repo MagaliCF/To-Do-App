@@ -7,11 +7,13 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import com.example.to_do.models.Task;
+import com.example.to_do.models.User;
 
-@Database(entities = Task.class, version = 2)
+@Database(entities = {Task.class, User.class}, version = 3)
     public abstract class TaskDatabase extends RoomDatabase {
     private static TaskDatabase instance;
     public abstract TaskDao taskDao();
+    public abstract UserDao userDao();
     public static synchronized TaskDatabase getInstance(Context context){
         if (instance == null){
             instance = Room.databaseBuilder(context.getApplicationContext()
