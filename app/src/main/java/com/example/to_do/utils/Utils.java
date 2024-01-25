@@ -2,6 +2,8 @@ package com.example.to_do.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.example.to_do.models.User;
 import com.google.gson.Gson;
@@ -25,5 +27,10 @@ public class Utils {
         User user = gson.fromJson(json, User.class);
 
         return user;
+    }
+
+    public static void hideKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

@@ -45,6 +45,7 @@ public class TaskViewModel extends AndroidViewModel {
         taskRepository.updateDataUser(user);
     }
     public LiveData<String> getUserNameExist(String mUsername){
+        username = taskRepository.getUserNameExist(mUsername);
         return username;
     }
     //Task methods

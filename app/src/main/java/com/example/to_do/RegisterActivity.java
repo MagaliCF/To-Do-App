@@ -4,10 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,7 +31,8 @@ public class RegisterActivity extends AppCompatActivity {
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        taskViewModel = (TaskViewModel) new ViewModelProvider(this).get(TaskViewModel.class);
+        taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
+        binding.setLifecycleOwner(this);
 
         binding.txtViewSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,15 +60,12 @@ public class RegisterActivity extends AppCompatActivity {
                 if(password.equals(passwordConfirm)) {
                     try {
                         User user = new User(username, password, name, lastname);
-                        taskViewModel.init(user);
                         taskViewModel.getUserNameExist(username).observe(this, new Observer<String>() {
                             @Override
                             public void onChanged(String mUsername) {
-                                /*Log.e(TAG, "User seved hola: " + mUsername);
-                                Log.e(TAG, "User seved parte uno: " + username.equals(mUsername));*/
                                 if(!username.equals(mUsername)){
-                                    User user = new User(username, password, name, lastname);
-                                    taskViewModel.init(user);
+
+                                    //TODO: Checar pq se manda la petición dos veces
 
                                     taskViewModel.insertUser(user);
 
