@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.example.to_do.adapters.AdapterToDoList;
 import com.example.to_do.databinding.ActivityMainBinding;
 import com.example.to_do.models.Task;
+import com.example.to_do.models.User;
 import com.example.to_do.utils.Utils;
 import com.example.to_do.viewmodel.TaskViewModel;
 
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
     ActivityMainBinding binding;
     private TaskViewModel taskViewModel;
-    private int user;
+    private User user;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        user = Utils.getUser(getApplicationContext(),"authCredentials").getId();
+        user = Utils.getUser(getApplicationContext(),"authCredentials");
 
         taskViewModel = (TaskViewModel) new ViewModelProvider(this).get(TaskViewModel.class);
         taskViewModel.init(user);
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         AdapterToDoList adapter = new AdapterToDoList();
         binding.recyclerView.setAdapter(adapter);
 
-        taskViewModel.getAllTasks(user).observe(this, new Observer<List<Task>>() {
+        taskViewModel.getAllTasks(user.getId()).observe(this, new Observer<List<Task>>() {
             @Override
             public void onChanged(List<Task> tasks) {
                 adapter.setTasks(tasks);
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
             String createdDate = data.getStringExtra("createdDate");
             String endDate = data.getStringExtra("endDate");
 
-            Task task = new Task(title,description,endDate,createdDate,1, user);
+            Task task = new Task(title,description,endDate,createdDate,1, user.getId());
 
             taskViewModel.insert(task);
 

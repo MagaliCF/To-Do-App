@@ -1,6 +1,7 @@
 package com.example.to_do;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
@@ -11,45 +12,33 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.to_do.databinding.ActivityRegisterBinding;
 import com.example.to_do.models.User;
 import com.example.to_do.utils.Utils;
 import com.example.to_do.viewmodel.TaskViewModel;
 
 public class RegisterActivity extends AppCompatActivity {
     public static final String TAG = RegisterActivity.class.getSimpleName();
-    private EditText editTxtName;
-    private EditText editTxtLastname;
-    private EditText editTxtUsername;
-    private EditText editTxtPassword;
-    private EditText editTxtPasswordConfirm;
-    private TextView txtViewCancel;
-    private TextView txtViewSave;
 
+    ActivityRegisterBinding binding;
     private TaskViewModel taskViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
-
-        editTxtName = findViewById(R.id.editTxtName);
-        editTxtLastname = findViewById(R.id.editTxtLastname);
-        editTxtUsername = findViewById(R.id.editTxtUsername);
-        editTxtPassword = findViewById(R.id.editTxtPassword);
-        editTxtPasswordConfirm = findViewById(R.id.editTxtPasswordConfirm);
-        txtViewCancel = findViewById(R.id.txtViewCancel);
-        txtViewSave = findViewById(R.id.txtViewSave);
+        binding = ActivityRegisterBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         taskViewModel = (TaskViewModel) new ViewModelProvider(this).get(TaskViewModel.class);
 
-        txtViewSave.setOnClickListener(new View.OnClickListener() {
+        binding.txtViewSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 saveUser();
             }
         });
 
-        txtViewCancel.setOnClickListener(new View.OnClickListener() {
+        binding.txtViewCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 back();
@@ -57,28 +46,45 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
     private void saveUser(){
-        String username = editTxtUsername.getText().toString();
-        String password = editTxtPassword.getText().toString();
-        String name = editTxtName.getText().toString();
-        String lastname = editTxtLastname.getText().toString();
-        String passwordConfirm = editTxtPasswordConfirm.getText().toString();
+        String username = binding.edtTxtUsername.getText().toString();
+        String password = binding.edtTxtPassword.getText().toString();
+        String name = binding.edtTxtName.getText().toString();
+        String lastname = binding.edtTxtLastname.getText().toString();
+        String passwordConfirm = binding.edtTxtPasswordConfirm.getText().toString();
 
-        if(!(name.equals("")||lastname.equals("")||username.equals("")||password.equals("")||passwordConfirm.equals(""))){
-            if(password.equals(passwordConfirm) && password.length() > 7){
-                User user = new User(username, password, name, lastname);
+        if(!(name.trim().isEmpty()||lastname.trim().isEmpty()||username.trim().isEmpty()||password.trim().isEmpty()||passwordConfirm.trim().isEmpty())){
+            if(password.length() > 7){
+                if(password.equals(passwordConfirm)) {
+                    try {
+                        User user = new User(username, password, name, lastname);
+                        taskViewModel.init(user);
+                        taskViewModel.getUserNameExist(username).observe(this, new Observer<String>() {
+                            @Override
+                            public void onChanged(String mUsername) {
+                                /*Log.e(TAG, "User seved hola: " + mUsername);
+                                Log.e(TAG, "User seved parte uno: " + username.equals(mUsername));*/
+                                if(!username.equals(mUsername)){
+                                    User user = new User(username, password, name, lastname);
+                                    taskViewModel.init(user);
 
-                //TODO: Hacer la validación de exitencia de usuario, pero que se preocupe la Magali del futuro
-                /*taskViewModel.insertUser(user);
+                                    taskViewModel.insertUser(user);
 
-                Utils.setUser(
-                        getApplicationContext(),
-                        "authCredentials",
-                        user
-                );*/
-
-                Log.e(TAG, "User seved: " + user.toString() + " with id: " + user.getId());
+                                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Este usuario ya existe", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    } catch (Exception e){
+                        Log.e(TAG, "ERROR: " + e.getMessage());
+                    }
+                } else {
+                    Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
+                }
             } else {
-                Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "La contraseña debe tener 8 caracteres mínimo", Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(this, "Verifica tus datos", Toast.LENGTH_SHORT).show();

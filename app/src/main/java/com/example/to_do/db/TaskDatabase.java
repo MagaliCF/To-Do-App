@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase;
 import com.example.to_do.models.Task;
 import com.example.to_do.models.User;
 
-@Database(entities = {Task.class, User.class}, version = 3)
+@Database(entities = {Task.class, User.class}, version = 4)
     public abstract class TaskDatabase extends RoomDatabase {
     private static TaskDatabase instance;
     public abstract TaskDao taskDao();

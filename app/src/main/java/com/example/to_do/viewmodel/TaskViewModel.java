@@ -18,16 +18,18 @@ import java.util.List;
 public class TaskViewModel extends AndroidViewModel {
     private TaskRepository taskRepository;
     private LiveData<List<Task>> taskList;
-    private int user;
+    private User user;
+    private LiveData<String> username;
 
     public TaskViewModel(@NonNull Application application) {
         super(application);
         taskRepository = new TaskRepository(application);
     }
 
-    public void init(int user) {
+    public void init(User user) {
         this.user = user;
-        taskList = taskRepository.getAllData(user);
+        taskList = taskRepository.getAllData(user.getId());
+        username = taskRepository.getUserNameExist(user.getUsername());
     }
 
     //User methods
@@ -41,6 +43,9 @@ public class TaskViewModel extends AndroidViewModel {
 
     public void updateUser(User user) {
         taskRepository.updateDataUser(user);
+    }
+    public LiveData<String> getUserNameExist(String mUsername){
+        return username;
     }
     //Task methods
     public void insert(Task task) {

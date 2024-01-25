@@ -1,5 +1,6 @@
 package com.example.to_do.db;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -21,5 +22,5 @@ public interface UserDao {
     public void delete(User user);
 
     @Query("SELECT username FROM users_table WHERE username = :username")
-    public String getUserNameExist(String username);
+    public LiveData<String> getUserNameExist(String username);
 }
