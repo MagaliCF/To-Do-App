@@ -59,18 +59,17 @@ public class RegisterActivity extends AppCompatActivity {
             if(password.length() > 7){
                 if(password.equals(passwordConfirm)) {
                     try {
-                        User user = new User(username, password, name, lastname);
                         taskViewModel.getUserNameExist(username).observe(this, new Observer<String>() {
                             @Override
                             public void onChanged(String mUsername) {
                                 if(!username.equals(mUsername)){
-
                                     //TODO: Checar pq se manda la petición dos veces
-
-                                    taskViewModel.insertUser(user);
-
-                                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                                    startActivity(intent);
+                                    Intent intent = new Intent();
+                                    intent.putExtra("username",username);
+                                    intent.putExtra("password",password);
+                                    intent.putExtra("name",name);
+                                    intent.putExtra("lastname",lastname);
+                                    setResult(RESULT_OK, intent);
                                     finish();
                                 } else {
                                     Toast.makeText(getApplicationContext(), "Este usuario ya existe", Toast.LENGTH_SHORT).show();

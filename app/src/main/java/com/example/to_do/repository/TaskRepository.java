@@ -19,6 +19,7 @@
         private UserDao userDao;
         private LiveData<List<Task>> taskList;
         private LiveData<String> username;
+        private LiveData<String> password;
 
         public TaskRepository (Application app){
             TaskDatabase taskDatabase = TaskDatabase.getInstance(app);
@@ -79,6 +80,14 @@
         public LiveData<String> getUserNameExist(String mUsername){
             try {
                 username = userDao.getUserNameExist(mUsername);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return username;
+        }
+        public LiveData<String> getUserPassword(String mUsername){
+            try {
+                password = userDao.getUserPassword(mUsername);
             } catch (Exception e) {
                 e.printStackTrace();
             }

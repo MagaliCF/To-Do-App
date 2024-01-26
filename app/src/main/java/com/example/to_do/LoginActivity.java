@@ -9,45 +9,46 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.to_do.databinding.ActivityLoginBinding;
+import com.example.to_do.databinding.ActivityRegisterBinding;
 import com.example.to_do.models.User;
 import com.example.to_do.utils.Utils;
+import com.example.to_do.viewmodel.TaskViewModel;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText editTxtUser;
-    private EditText editTxtPassword;
-    private TextView txtViewRegiterHere;
-    private TextView txtViewLogin;
-
+    ActivityLoginBinding binding;
+    private TaskViewModel taskViewModel;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        editTxtUser = findViewById(R.id.editTxtUsername);
-        editTxtPassword = findViewById(R.id.editTxtPwd);
-        txtViewRegiterHere = findViewById(R.id.txtViewRegister);
-        txtViewLogin = findViewById(R.id.txtViewLogin);
+        taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
+        binding.setLifecycleOwner(this);
 
-        txtViewRegiterHere.setOnClickListener(new View.OnClickListener() {
+        binding.txtViewRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Toast.makeText(LoginActivity.this, "Aún estamos trabajando en ello...", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(intent);
-                finish();
+                startActivityForResult(intent, 1);
             }
         });
 
-        txtViewLogin.setOnClickListener(new View.OnClickListener() {
+        binding.txtViewLogin.setOnClickListener(new View.OnClickListener() {
+            String username = binding.editTxtUsername.getText().toString();
+            String password = binding.editTxtPwd.getText().toString();
             @Override
             public void onClick(View view) {
-                if(!editTxtUser.getText().toString().equals("") && !editTxtPassword.getText().toString().equals("")){
+                if(!username.equals("") && !password.equals("")){
                     Utils.setUser(
                             getApplicationContext(),
                             "authCredentials",
-                            new User(editTxtUser.getText().toString(), editTxtPassword.getText().toString())
+                            new User(username, password)
                     );
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
@@ -58,5 +59,23 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1){
+            String username = data.getStringExtra("username");
+            String password = data.getStringExtra("password");
+            String name = data.getStringExtra("name");
+            String lastname = data.getStringExtra("lastname");
+
+            User user = new User(username,password,name, lastname);
+
+            taskViewModel.insertUser(user);
+
+            Toast.makeText(this, "Ahora puedes iniciar sesión", Toast.LENGTH_SHORT).show();
+
+        }
     }
 }

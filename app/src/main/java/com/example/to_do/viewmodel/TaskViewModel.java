@@ -20,6 +20,7 @@ public class TaskViewModel extends AndroidViewModel {
     private LiveData<List<Task>> taskList;
     private User user;
     private LiveData<String> username;
+    private LiveData<String> password;
 
     public TaskViewModel(@NonNull Application application) {
         super(application);
@@ -30,6 +31,7 @@ public class TaskViewModel extends AndroidViewModel {
         this.user = user;
         taskList = taskRepository.getAllData(user.getId());
         username = taskRepository.getUserNameExist(user.getUsername());
+        password = taskRepository.getUserPassword(user.getUsername());
     }
 
     //User methods
@@ -47,6 +49,10 @@ public class TaskViewModel extends AndroidViewModel {
     public LiveData<String> getUserNameExist(String mUsername){
         username = taskRepository.getUserNameExist(mUsername);
         return username;
+    }
+    public LiveData<String> getUserPassword(String mUsername){
+        password = taskRepository.getUserPassword(mUsername);
+        return password;
     }
     //Task methods
     public void insert(Task task) {
