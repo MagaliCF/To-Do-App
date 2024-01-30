@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        binding.txtViewLogin.setOnClickListener(new View.OnClickListener() {
+        /*binding.txtViewLogin.setOnClickListener(new View.OnClickListener() {
             String username = binding.editTxtUsername.getText().toString();
             String password = binding.editTxtPwd.getText().toString();
             @Override
@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "Verifica tus datos", Toast.LENGTH_SHORT).show();
                 }
             }
-        });
+        });*/
 
     }
 

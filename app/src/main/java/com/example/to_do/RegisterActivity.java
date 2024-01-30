@@ -24,6 +24,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     ActivityRegisterBinding binding;
     private TaskViewModel taskViewModel;
+    boolean showMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
         binding.setLifecycleOwner(this);
 
+        showMessage = true;
         binding.txtViewSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -56,22 +58,22 @@ public class RegisterActivity extends AppCompatActivity {
         String passwordConfirm = binding.edtTxtPasswordConfirm.getText().toString();
 
         if(!(name.trim().isEmpty()||lastname.trim().isEmpty()||username.trim().isEmpty()||password.trim().isEmpty()||passwordConfirm.trim().isEmpty())){
-            if(password.length() > 7){
+            if(password.length() > 7 && name.length() > 2 && username.length() > 2 && lastname.length() > 2){
                 if(password.equals(passwordConfirm)) {
                     try {
                         taskViewModel.getUserNameExist(username).observe(this, new Observer<String>() {
                             @Override
                             public void onChanged(String mUsername) {
                                 if(!username.equals(mUsername)){
-                                    //TODO: Checar pq se manda la petición dos veces
                                     Intent intent = new Intent();
                                     intent.putExtra("username",username);
                                     intent.putExtra("password",password);
                                     intent.putExtra("name",name);
                                     intent.putExtra("lastname",lastname);
                                     setResult(RESULT_OK, intent);
+                                    showMessage = false;
                                     finish();
-                                } else {
+                                } else if(showMessage){
                                     Toast.makeText(getApplicationContext(), "Este usuario ya existe", Toast.LENGTH_SHORT).show();
                                 }
                             }
