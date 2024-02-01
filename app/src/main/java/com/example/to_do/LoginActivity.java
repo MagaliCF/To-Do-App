@@ -23,7 +23,8 @@ public class LoginActivity extends AppCompatActivity {
     public static final String TAG = LoginActivity.class.getSimpleName();
     ActivityLoginBinding binding;
     private TaskViewModel taskViewModel;
-    boolean userExist;
+    String username;
+    String password;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,7 +34,6 @@ public class LoginActivity extends AppCompatActivity {
 
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
         binding.setLifecycleOwner(this);
-        userExist = false;
 
         binding.txtViewRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,41 +47,16 @@ public class LoginActivity extends AppCompatActivity {
         binding.txtViewLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String username = binding.editTxtUsername.getText().toString().trim();
-                String password = binding.editTxtPwd.getText().toString().trim();
+                username = binding.editTxtUsername.getText().toString().trim();
+                password = binding.editTxtPwd.getText().toString().trim();
 
                 if (!(username.isEmpty() || password.isEmpty())) {
                     checkUser(username);
-                    if (userExist) {
-                        login(username, password);
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Este usuario no existe", Toast.LENGTH_SHORT).show();
-                    }
                 } else {
                     Toast.makeText(getApplicationContext(), "Hay campos vacíos", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-        /*binding.txtViewLogin.setOnClickListener(new View.OnClickListener() {
-            String username = binding.editTxtUsername.getText().toString();
-            String password = binding.editTxtPwd.getText().toString();
-            @Override
-            public void onClick(View view) {
-                if(!username.equals("") && !password.equals("")){
-                    Utils.setUser(
-                            getApplicationContext(),
-                            "authCredentials",
-                            new User(username, password)
-                    );
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Toast.makeText(LoginActivity.this, "Verifica tus datos", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });*/
-
     }
 
     @Override
@@ -108,7 +83,11 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onChanged(String mUsername) {
                     if (username.equals(mUsername)) {
-                        userExist = true;
+                        Log.e(TAG, "onChanged: " + mUsername);
+                        login(mUsername, password);
+
+                    } else if (mUsername == null) {
+                        Toast.makeText(getApplicationContext(), "Este usuario no existe", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -122,9 +101,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onChanged(User user) {
                 try {
-                    Log.e(TAG, "onChanged user: " + user.toString());
-                    Log.e(TAG, "onChanged user id: " + user.getId());
-                    if (password.equals(user.getPassword())) {
+                    if(user != null){
+                        Log.e(TAG, "onChanged user: " + user.toString());
+                        Log.e(TAG, "onChanged user id: " + user.getId());
                         Utils.setUser(
                                 getApplicationContext(),
                                 "authCredentials",
