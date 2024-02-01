@@ -19,7 +19,7 @@
         private UserDao userDao;
         private LiveData<List<Task>> taskList;
         private LiveData<String> username;
-        private LiveData<String> password;
+        private LiveData<User> mUser;
 
         public TaskRepository (Application app){
             TaskDatabase taskDatabase = TaskDatabase.getInstance(app);
@@ -85,13 +85,13 @@
             }
             return username;
         }
-        public LiveData<String> getUserPassword(String mUsername){
+        public LiveData<User> getUser(String mUsername, String mPassword){
             try {
-                password = userDao.getUserPassword(mUsername);
+                mUser = userDao.getUser(mUsername, mPassword);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return username;
+            return mUser;
         }
         //Async task methods
         private static class InsertTask extends AsyncTask<Task,Void,Void>{

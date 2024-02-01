@@ -51,13 +51,13 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
     private void saveUser(){
-        String username = binding.edtTxtUsername.getText().toString();
-        String password = binding.edtTxtPassword.getText().toString();
-        String name = binding.edtTxtName.getText().toString();
-        String lastname = binding.edtTxtLastname.getText().toString();
-        String passwordConfirm = binding.edtTxtPasswordConfirm.getText().toString();
+        String username = binding.edtTxtUsername.getText().toString().trim();
+        String password = binding.edtTxtPassword.getText().toString().trim();
+        String name = binding.edtTxtName.getText().toString().trim();
+        String lastname = binding.edtTxtLastname.getText().toString().trim();
+        String passwordConfirm = binding.edtTxtPasswordConfirm.getText().toString().trim();
 
-        if(!(name.trim().isEmpty()||lastname.trim().isEmpty()||username.trim().isEmpty()||password.trim().isEmpty()||passwordConfirm.trim().isEmpty())){
+        if(!(name.isEmpty()||lastname.isEmpty()||username.isEmpty()||password.isEmpty()||passwordConfirm.isEmpty())){
             if(password.length() > 7 && name.length() > 2 && username.length() > 2 && lastname.length() > 2){
                 if(password.equals(passwordConfirm)) {
                     try {

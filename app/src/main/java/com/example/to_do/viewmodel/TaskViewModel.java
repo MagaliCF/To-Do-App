@@ -18,9 +18,8 @@ import java.util.List;
 public class TaskViewModel extends AndroidViewModel {
     private TaskRepository taskRepository;
     private LiveData<List<Task>> taskList;
-    private User user;
     private LiveData<String> username;
-    private LiveData<String> password;
+    private LiveData<User> mUser;
 
     public TaskViewModel(@NonNull Application application) {
         super(application);
@@ -28,10 +27,9 @@ public class TaskViewModel extends AndroidViewModel {
     }
 
     public void init(User user) {
-        this.user = user;
         taskList = taskRepository.getAllData(user.getId());
         username = taskRepository.getUserNameExist(user.getUsername());
-        password = taskRepository.getUserPassword(user.getUsername());
+        mUser = taskRepository.getUser(user.getUsername(), user.getPassword());
     }
 
     //User methods
@@ -50,9 +48,10 @@ public class TaskViewModel extends AndroidViewModel {
         username = taskRepository.getUserNameExist(mUsername);
         return username;
     }
-    public LiveData<String> getUserPassword(String mUsername){
-        password = taskRepository.getUserPassword(mUsername);
-        return password;
+
+    public  LiveData<User> getUser(String mUsername, String mPassword){
+        mUser = taskRepository.getUser(mUsername, mPassword);
+        return mUser;
     }
     //Task methods
     public void insert(Task task) {
