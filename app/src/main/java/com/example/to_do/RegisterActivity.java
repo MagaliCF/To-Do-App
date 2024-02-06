@@ -89,7 +89,7 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(this, "La contraseña debe tener 8 caracteres mínimo", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(this, "Nombre, apellido y usuario deben tener al menos 3 caracteres", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Tu nombre, apellido o usuario son muy cortos", Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(this, "Verifica tus datos", Toast.LENGTH_SHORT).show();
