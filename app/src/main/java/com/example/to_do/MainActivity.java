@@ -96,6 +96,19 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Has eliminado una nota", Toast.LENGTH_SHORT).show();
             }
         }).attachToRecyclerView(binding.recyclerView);
+
+        adapter.setOnItemClickListener(new AdapterToDoList.OnItemClickListener() {
+            @Override
+            public void onItemClick(Task task) {
+                Intent i = new Intent(MainActivity.this, NewTaskActivity.class);
+                i.putExtra("id", task.getId());
+                i.putExtra("title", task.getName());
+                i.putExtra("description", task.getDescription());
+                i.putExtra("endDate", task.getEndDate());
+                i.putExtra("createdDate", task.getCreatedDate());
+                startActivityForResult(i, 2);
+            }
+        });
     }
 
     @Override
@@ -112,6 +125,23 @@ public class MainActivity extends AppCompatActivity {
             taskViewModel.insert(task);
 
             Toast.makeText(this, "¡Has agregado una nota correctamente!", Toast.LENGTH_SHORT).show();
+        } else if(requestCode == 2 && resultCode == RESULT_OK){
+            int id = data.getIntExtra("id", -1);
+            if(id == -1){
+                Toast.makeText(this, "La nota no se actualizó", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String title = data.getStringExtra("title");
+            String description = data.getStringExtra("description");
+            String createdDate = data.getStringExtra("createdDate");
+            String endDate = data.getStringExtra("endDate");
+
+            Task task = new Task(title, description, endDate, createdDate,1, user.getId());
+            task.setId(id);
+
+            taskViewModel.update(task);
+
+            Toast.makeText(this, "¡Has editado una nota correctamente!", Toast.LENGTH_SHORT).show();
         }
     }
 }
