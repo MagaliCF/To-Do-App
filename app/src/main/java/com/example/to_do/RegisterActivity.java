@@ -58,34 +58,38 @@ public class RegisterActivity extends AppCompatActivity {
         String passwordConfirm = binding.edtTxtPasswordConfirm.getText().toString().trim();
 
         if(!(name.isEmpty()||lastname.isEmpty()||username.isEmpty()||password.isEmpty()||passwordConfirm.isEmpty())){
-            if(password.length() > 7 && name.length() > 2 && username.length() > 2 && lastname.length() > 2){
-                if(password.equals(passwordConfirm)) {
-                    try {
-                        taskViewModel.getUserNameExist(username).observe(this, new Observer<String>() {
-                            @Override
-                            public void onChanged(String mUsername) {
-                                if(!username.equals(mUsername)){
-                                    Intent intent = new Intent();
-                                    intent.putExtra("username",username);
-                                    intent.putExtra("password",password);
-                                    intent.putExtra("name",name);
-                                    intent.putExtra("lastname",lastname);
-                                    setResult(RESULT_OK, intent);
-                                    showMessage = false;
-                                    finish();
-                                } else if(showMessage){
-                                    Toast.makeText(getApplicationContext(), "Este usuario ya existe", Toast.LENGTH_SHORT).show();
+            if(name.length() > 2 && username.length() > 2 && lastname.length() > 2){
+                if(password.length() > 7){
+                    if(password.equals(passwordConfirm)) {
+                        try {
+                            taskViewModel.getUserNameExist(username).observe(this, new Observer<String>() {
+                                @Override
+                                public void onChanged(String mUsername) {
+                                    if(!username.equals(mUsername)){
+                                        Intent intent = new Intent();
+                                        intent.putExtra("username",username);
+                                        intent.putExtra("password",password);
+                                        intent.putExtra("name",name);
+                                        intent.putExtra("lastname",lastname);
+                                        setResult(RESULT_OK, intent);
+                                        showMessage = false;
+                                        finish();
+                                    } else if(showMessage){
+                                        Toast.makeText(getApplicationContext(), "Este usuario ya existe", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
-                            }
-                        });
-                    } catch (Exception e){
-                        Log.e(TAG, "ERROR: " + e.getMessage());
+                            });
+                        } catch (Exception e){
+                            Log.e(TAG, "ERROR: " + e.getMessage());
+                        }
+                    } else {
+                        Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "La contraseña debe tener 8 caracteres mínimo", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(this, "La contraseña debe tener 8 caracteres mínimo", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Nombre, apellido y usuario deben tener al menos 3 caracteres", Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(this, "Verifica tus datos", Toast.LENGTH_SHORT).show();
