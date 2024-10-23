@@ -22,6 +22,7 @@ import java.util.List;
 public class AdapterToDoList extends RecyclerView.Adapter<AdapterToDoList.ViewHolderToDoList>{
 
     private List<Task> tasks = new ArrayList<>();
+    private OnItemClickListener listener;
 
 
     @NonNull
@@ -74,6 +75,24 @@ public class AdapterToDoList extends RecyclerView.Adapter<AdapterToDoList.ViewHo
             txtViewDescription = itemView.findViewById(R.id.txtViewDescription);
             txtViewDate = itemView.findViewById(R.id.txtViewDate);
             imgViewStatus = itemView.findViewById(R.id.imgStatus);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    if(listener != null && position != RecyclerView.NO_POSITION) {
+                        listener.onItemClick(tasks.get(position));
+                    }
+                }
+            });
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(Task task);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener){
+        this.listener = listener;
     }
 }

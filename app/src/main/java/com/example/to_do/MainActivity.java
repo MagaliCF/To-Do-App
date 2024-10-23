@@ -18,16 +18,20 @@ import android.widget.Toast;
 import com.example.to_do.adapters.AdapterToDoList;
 import com.example.to_do.databinding.ActivityMainBinding;
 import com.example.to_do.models.Task;
+import com.example.to_do.models.User;
 import com.example.to_do.utils.Utils;
 import com.example.to_do.viewmodel.TaskViewModel;
 
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
     ActivityMainBinding binding;
     private TaskViewModel taskViewModel;
-    private String user;
+    private User user;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -36,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        user = Utils.getUser(getApplicationContext(),"authCredentials").getUsername();
+        user = Utils.getUser(getApplicationContext(),"authCredentials");
 
         taskViewModel = (TaskViewModel) new ViewModelProvider(this).get(TaskViewModel.class);
         taskViewModel.init(user);
@@ -74,20 +78,13 @@ public class MainActivity extends AppCompatActivity {
         AdapterToDoList adapter = new AdapterToDoList();
         binding.recyclerView.setAdapter(adapter);
 
-        taskViewModel.getAllTasks(user).observe(this, new Observer<List<Task>>() {
+        taskViewModel.getAllTasks(user.getId()).observe(this, new Observer<List<Task>>() {
             @Override
             public void onChanged(List<Task> tasks) {
                 adapter.setTasks(tasks);
             }
         });
 
-        /*taskViewModel.getAllTasks().observe(this, new Observer<List<Task>>() {
-            @Override
-            public void onChanged(List<Task> tasks) {
-                Toast.makeText(MainActivity.this, "Tamaño de la lista de tareas: " + tasks.size(), Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "onChanged: Submit llamado");
-            }
-        });*/
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -99,6 +96,19 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Has eliminado una nota", Toast.LENGTH_SHORT).show();
             }
         }).attachToRecyclerView(binding.recyclerView);
+
+        adapter.setOnItemClickListener(new AdapterToDoList.OnItemClickListener() {
+            @Override
+            public void onItemClick(Task task) {
+                Intent i = new Intent(MainActivity.this, NewTaskActivity.class);
+                i.putExtra("id", task.getId());
+                i.putExtra("title", task.getName());
+                i.putExtra("description", task.getDescription());
+                i.putExtra("endDate", task.getEndDate());
+                i.putExtra("createdDate", task.getCreatedDate());
+                startActivityForResult(i, 2);
+            }
+        });
     }
 
     @Override
@@ -110,11 +120,28 @@ public class MainActivity extends AppCompatActivity {
             String createdDate = data.getStringExtra("createdDate");
             String endDate = data.getStringExtra("endDate");
 
-            Task task = new Task(title,description,endDate,createdDate,1, user);
+            Task task = new Task(title,description,endDate,createdDate,1, user.getId());
 
             taskViewModel.insert(task);
 
             Toast.makeText(this, "¡Has agregado una nota correctamente!", Toast.LENGTH_SHORT).show();
+        } else if(requestCode == 2 && resultCode == RESULT_OK){
+            int id = data.getIntExtra("id", -1);
+            if(id == -1){
+                Toast.makeText(this, "La nota no se actualizó", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String title = data.getStringExtra("title");
+            String description = data.getStringExtra("description");
+            String createdDate = data.getStringExtra("createdDate");
+            String endDate = data.getStringExtra("endDate");
+
+            Task task = new Task(title, description, endDate, createdDate,1, user.getId());
+            task.setId(id);
+
+            taskViewModel.update(task);
+
+            Toast.makeText(this, "¡Has editado una nota correctamente!", Toast.LENGTH_SHORT).show();
         }
     }
 }

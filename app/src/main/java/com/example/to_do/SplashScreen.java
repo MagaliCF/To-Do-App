@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
-import com.example.to_do.models.Login;
+import com.example.to_do.models.User;
 import com.example.to_do.utils.Utils;
 
 public class SplashScreen extends AppCompatActivity {
@@ -26,7 +26,7 @@ public class SplashScreen extends AppCompatActivity {
                 Intent intent = null;
 
                 try {
-                    Login user = Utils.getUser(getApplicationContext(),"authCredentials");
+                    User user = Utils.getUser(getApplicationContext(),"authCredentials");
                     Log.i(TAG, "run user information: " + user.getUsername());
                     intent = new Intent(SplashScreen.this, MainActivity.class);
                 } catch (Exception e){

@@ -9,10 +9,6 @@
             type="com.example.to_do.NewTaskActivity" />
     </data>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -39,6 +35,7 @@
                 android:layout_marginTop="32dp"
                 android:fontFamily="sans-serif"
                 android:text="Nombre:"
+                android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/guideline3"
@@ -53,7 +50,7 @@
                 android:layout_marginEnd="32dp"
                 android:ems="11"
                 android:hint="DD/MM/AAAA"
-                android:inputType="text"
+                android:inputType="date"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -66,6 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Descripción"
+                android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/guideline3"
@@ -80,8 +78,9 @@
                 android:layout_marginEnd="32dp"
                 android:ems="11"
                 android:hint="¿qué hay qué hacer hoy?"
-                android:inputType="text"
+                android:inputType="textCapSentences"
                 android:textSize="16sp"
+                android:maxLines="5"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/guideline3"
@@ -93,6 +92,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Creada el día 17/01/2024"
+                android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/guideline3"
@@ -104,6 +104,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Fecha límite:"
+                android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/guideline3"
@@ -118,7 +119,7 @@
                 android:layout_marginEnd="32dp"
                 android:ems="11"
                 android:hint="Escribe un nombre..."
-                android:inputType="text"
+                android:inputType="textCapSentences"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -162,6 +163,4 @@
                 app:layout_constraintGuide_percent="0.2" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </RelativeLayout>
 </layout>
